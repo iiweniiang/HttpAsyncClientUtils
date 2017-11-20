@@ -37,7 +37,7 @@ public class HttpClientUtil {
      * @return 返回结果,请求失败时返回null
      * @apiNote http接口处用 @RequestParam接收参数
      */
-    public void httpSyncPost(String baseUrl,List<BasicNameValuePair> list) throws Exception {
+    public static void httpSyncPost(String baseUrl,List<BasicNameValuePair> list) {
 
         CloseableHttpClient httpClient = HttpClientFactory.getInstance().getHttpSyncClientPool().getHttpClient();
         HttpPost httpPost = new HttpPost(baseUrl);
@@ -82,7 +82,7 @@ public class HttpClientUtil {
      * @return 返回结果,请求失败时返回null
      * @apiNote http接口处用 @RequestBody接收参数
      */
-    public void httpSyncPost(String baseUrl,String postString) throws Exception {
+    public static void httpSyncPost(String baseUrl,String postString)  {
 
         CloseableHttpClient httpClient = HttpClientFactory.getInstance().getHttpSyncClientPool().getHttpClient();
         HttpPost httpPost = new HttpPost(baseUrl);
@@ -136,7 +136,7 @@ public class HttpClientUtil {
      * @return 返回结果,请求失败时返回null
      * @apiNote http接口处用 @RequestParam接收参数
      */
-    public void httpSyncGet(String baseUrl,List<BasicNameValuePair> list)  {
+    public static void httpSyncGet(String baseUrl,List<BasicNameValuePair> list)  {
 
         CloseableHttpClient httpClient = HttpClientFactory.getInstance().getHttpSyncClientPool().getHttpClient();
         HttpGet httpGet = new HttpGet(baseUrl);
@@ -190,7 +190,7 @@ public class HttpClientUtil {
      * @return 返回结果,请求失败时返回null
      * @apiNote http接口处用 @RequestParam接收参数
      */
-    public void httpSyncGet(String baseUrl,String urlParams)  {
+    public static void httpSyncGet(String baseUrl,String urlParams)  {
 
         CloseableHttpClient httpClient = HttpClientFactory.getInstance().getHttpSyncClientPool().getHttpClient();
         HttpGet httpGet = new HttpGet(baseUrl);
@@ -248,7 +248,7 @@ public class HttpClientUtil {
      * @return 返回结果,请求失败时返回null
      * @apiNote http接口处用 @RequestParam接收参数
      */
-    public void httpAsyncPost(String baseUrl,String postString,
+    public static void httpAsyncPost(String baseUrl,String postString,
                               String urlParams,FutureCallback callback) throws Exception {
         if (baseUrl == null || "".equals(baseUrl)) {
             LOG.warn("we don't have base url, check config");
@@ -291,8 +291,8 @@ public class HttpClientUtil {
      * @return 返回结果,请求失败时返回null
      * @apiNote http接口处用 @RequestParam接收参数
      */
-    public void httpAsyncPost(String baseUrl,List<BasicNameValuePair> postBody,
-                              List<BasicNameValuePair> urlParams,FutureCallback callback) throws Exception {
+    public static void httpAsyncPost(String baseUrl, List<BasicNameValuePair> postBody,
+                              List<BasicNameValuePair> urlParams, FutureCallback callback) throws Exception {
         if (baseUrl == null || "".equals(baseUrl)) {
             LOG.warn("we don't have base url, check config");
             throw new Exception("missing base url");
@@ -339,7 +339,7 @@ public class HttpClientUtil {
      * @return 返回结果,请求失败时返回null
      * @apiNote http接口处用 @RequestParam接收参数
      */
-    public void httpAsyncGet(String baseUrl,String urlParams,FutureCallback callback) throws Exception {
+    public static void httpAsyncGet(String baseUrl,String urlParams,FutureCallback callback) throws Exception {
 
         if (baseUrl == null || "".equals(baseUrl)) {
             LOG.warn("we don't have base url, check config");
@@ -383,7 +383,7 @@ public class HttpClientUtil {
      * @return 返回结果,请求失败时返回null
      * @apiNote http接口处用 @RequestParam接收参数
      */
-    public void httpAsyncGet(String baseUrl,List<BasicNameValuePair> urlParams,FutureCallback callback) throws Exception {
+    public static void httpAsyncGet(String baseUrl, List<BasicNameValuePair> urlParams, FutureCallback callback) throws Exception {
         if (baseUrl == null || "".equals(baseUrl)) {
             LOG.warn("we don't have base url, check config");
             throw new Exception("missing base url");
