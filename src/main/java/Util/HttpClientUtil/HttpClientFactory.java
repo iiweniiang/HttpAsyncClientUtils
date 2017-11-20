@@ -21,11 +21,11 @@ public class HttpClientFactory {
 
     }
 
-    public HttpAsyncClient getHttpAsyncClientPool() {
+    protected HttpAsyncClient getHttpAsyncClientPool() {
         return httpAsyncClient;
     }
 
-    public HttpSyncClient getHttpSyncClientPool() {
+    protected HttpSyncClient getHttpSyncClientPool() {
         return httpSyncClient;
     }
 
