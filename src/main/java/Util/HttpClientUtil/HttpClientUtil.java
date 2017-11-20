@@ -37,7 +37,7 @@ public class HttpClientUtil {
      * @return 返回结果,请求失败时返回null
      * @apiNote http接口处用 @RequestParam接收参数
      */
-    public static void httpSyncPost(String baseUrl,List<BasicNameValuePair> list) {
+    public static String httpSyncPost(String baseUrl,List<BasicNameValuePair> list) {
 
         CloseableHttpClient httpClient = HttpClientFactory.getInstance().getHttpSyncClientPool().getHttpClient();
         HttpPost httpPost = new HttpPost(baseUrl);
@@ -50,11 +50,13 @@ public class HttpClientUtil {
             response = httpClient.execute(httpPost);
             LOG.warn("========HttpResponseProxy：========"+response.getStatusLine());
             HttpEntity entity = response.getEntity();
+            String result = null;
             if(entity != null){
-                String result = EntityUtils.toString(entity, "UTF-8");
+                result = EntityUtils.toString(entity, "UTF-8");
                 LOG.warn("========Response=======" +result);
             }
             EntityUtils.consume(entity);
+            return result;
         } catch (Exception e) {
             e.printStackTrace();
         }finally {
@@ -73,6 +75,7 @@ public class HttpClientUtil {
                 }
             }
         }
+        return null;
     }
 
     /**
@@ -82,7 +85,7 @@ public class HttpClientUtil {
      * @return 返回结果,请求失败时返回null
      * @apiNote http接口处用 @RequestBody接收参数
      */
-    public static void httpSyncPost(String baseUrl,String postString)  {
+    public static String httpSyncPost(String baseUrl, String postString)  {
 
         CloseableHttpClient httpClient = HttpClientFactory.getInstance().getHttpSyncClientPool().getHttpClient();
         HttpPost httpPost = new HttpPost(baseUrl);
@@ -97,17 +100,18 @@ public class HttpClientUtil {
             StringEntity stringEntity = new StringEntity(postString.toString(), utf8Charset);
             stringEntity.setContentEncoding("UTF-8");
             stringEntity.setContentType("application/json");
-
             httpPost.setEntity(stringEntity);
 
             response = httpClient.execute(httpPost);
             LOG.warn("========HttpResponseProxy：========"+response.getStatusLine());
             HttpEntity entity = response.getEntity();
+            String result = null;
             if(entity != null){
-                String result = EntityUtils.toString(entity, "UTF-8");
+                result = EntityUtils.toString(entity, "UTF-8");
                 LOG.warn("========Response=======" +result);
             }
             EntityUtils.consume(entity);
+            return result;
         } catch (Exception e) {
             e.printStackTrace();
         }finally {
@@ -126,6 +130,7 @@ public class HttpClientUtil {
                 }
             }
         }
+        return null;
     }
 
 
@@ -136,7 +141,7 @@ public class HttpClientUtil {
      * @return 返回结果,请求失败时返回null
      * @apiNote http接口处用 @RequestParam接收参数
      */
-    public static void httpSyncGet(String baseUrl,List<BasicNameValuePair> list)  {
+    public static String httpSyncGet(String baseUrl, List<BasicNameValuePair> list)  {
 
         CloseableHttpClient httpClient = HttpClientFactory.getInstance().getHttpSyncClientPool().getHttpClient();
         HttpGet httpGet = new HttpGet(baseUrl);
@@ -158,11 +163,13 @@ public class HttpClientUtil {
             response = httpClient.execute(httpGet);
             LOG.warn("========HttpResponseProxy：========"+response.getStatusLine());
             HttpEntity entity = response.getEntity();
+            String result = null;
             if(entity != null){
-                String result = EntityUtils.toString(entity, "UTF-8");
+                result = EntityUtils.toString(entity, "UTF-8");
                 LOG.warn("========Response=======" +result);
             }
             EntityUtils.consume(entity);
+            return result;
         } catch (Exception e) {
             e.printStackTrace();
         }finally {
@@ -181,6 +188,7 @@ public class HttpClientUtil {
                 }
             }
         }
+        return null;
     }
 
     /**
@@ -190,7 +198,7 @@ public class HttpClientUtil {
      * @return 返回结果,请求失败时返回null
      * @apiNote http接口处用 @RequestParam接收参数
      */
-    public static void httpSyncGet(String baseUrl,String urlParams)  {
+    public static String httpSyncGet(String baseUrl,String urlParams)  {
 
         CloseableHttpClient httpClient = HttpClientFactory.getInstance().getHttpSyncClientPool().getHttpClient();
         HttpGet httpGet = new HttpGet(baseUrl);
@@ -211,11 +219,13 @@ public class HttpClientUtil {
             response = httpClient.execute(httpGet);
             LOG.warn("========HttpResponseProxy：========"+response.getStatusLine());
             HttpEntity entity = response.getEntity();
+            String result = null;
             if(entity != null){
-                String result = EntityUtils.toString(entity, "UTF-8");
+                result = EntityUtils.toString(entity, "UTF-8");
                 LOG.warn("========Response=======" +result);
             }
             EntityUtils.consume(entity);
+            return result;
         } catch (Exception e) {
             e.printStackTrace();
         }finally {
@@ -234,8 +244,54 @@ public class HttpClientUtil {
                 }
             }
         }
+        return null;
     }
 
+
+    /**
+     * 向指定的url发送一次get请求,参数是字符串
+     * @param baseUrl 请求地址
+     * @return 返回结果,请求失败时返回null
+     * @apiNote http接口处用 @RequestParam接收参数
+     */
+    public static String httpSyncGet(String baseUrl)  {
+
+        CloseableHttpClient httpClient = HttpClientFactory.getInstance().getHttpSyncClientPool().getHttpClient();
+        HttpGet httpGet = new HttpGet(baseUrl);
+
+        CloseableHttpResponse response  = null;
+        try {
+            httpGet.setURI(new URI(httpGet.getURI().toString()));
+            response = httpClient.execute(httpGet);
+            LOG.warn("========HttpResponseProxy：========"+response.getStatusLine());
+            HttpEntity entity = response.getEntity();
+            String result = null;
+            if(entity != null){
+                result = EntityUtils.toString(entity, "UTF-8");
+                LOG.warn("========Response=======" +result);
+            }
+            EntityUtils.consume(entity);
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }finally {
+            if(response != null){
+                try {
+                    response.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if(httpClient != null){
+                try {
+                    httpClient.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return null;
+    }
 
 
 
