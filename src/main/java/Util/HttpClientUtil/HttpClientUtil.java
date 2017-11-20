@@ -1,7 +1,6 @@
 package Util.HttpClientUtil;
 
 import org.apache.http.HttpEntity;
-import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -38,12 +37,12 @@ public class HttpClientUtil {
      * @return 返回结果,请求失败时返回null
      * @apiNote http接口处用 @RequestParam接收参数
      */
-    public void httpSyncPost(String baseUrl,List<NameValuePair> list) throws Exception {
+    public void httpSyncPost(String baseUrl,List<BasicNameValuePair> list) throws Exception {
 
         CloseableHttpClient httpClient = HttpClientFactory.getInstance().getHttpSyncClientPool().getHttpClient();
         HttpPost httpPost = new HttpPost(baseUrl);
 
-        //拼接参数
+        //Parameters
         LOG.warn("==== Parameters ======" +list);
         CloseableHttpResponse response  = null;
         try {
@@ -137,11 +136,11 @@ public class HttpClientUtil {
      * @return 返回结果,请求失败时返回null
      * @apiNote http接口处用 @RequestParam接收参数
      */
-    public void httpSyncGet(String baseUrl,List<NameValuePair> list)  {
+    public void httpSyncGet(String baseUrl,List<BasicNameValuePair> list)  {
 
         CloseableHttpClient httpClient = HttpClientFactory.getInstance().getHttpSyncClientPool().getHttpClient();
         HttpGet httpGet = new HttpGet(baseUrl);
-        //拼接参数
+        //Parameters
         LOG.warn("==== Parameters ======" +list);
         CloseableHttpResponse response  = null;
         try {
@@ -195,7 +194,7 @@ public class HttpClientUtil {
 
         CloseableHttpClient httpClient = HttpClientFactory.getInstance().getHttpSyncClientPool().getHttpClient();
         HttpGet httpGet = new HttpGet(baseUrl);
-        //拼接参数
+        //Parameters
         LOG.warn("==== Parameters ======" +urlParams);
         CloseableHttpResponse response  = null;
         try {
