@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- status : 这个用于设置log4j2自身内部的信息输出,可以不设置,当设置成trace时,会看到log4j2内部各种详细输出 ,默认OFF
+	monitorInterval : Log4j能够自动检测修改配置文件和重新配置本身, 设置间隔秒数。
+	%d{yyyy-MM-dd HH:mm:ss, SSS} : 日志生产时间
+    %p : 日志输出格式
+    %c : logger的名称
+    %m : 日志内容，即 logger.info("message")
+    %n : 换行符
+    %C : Java类名
+    %L : 日志输出所在行数
+    %M : 日志输出所在方法名
+    hostName : 本地机器名 hostAddress : 本地ip地址
+-->
+<Configuration status="OFF">
+    <Properties>
+        <!-- 配置日志文件输出目录 -->
+        <property name="trans_log_path" value="/mnt/logs/HomeDotServerLogs/" />
+        <property name="file_size" value="5MB" />
+        <property name="file_encode" value="UTF-8" />
+        <property name="file_max_count" value="2000" />
+        <property name="file_dir">/logs/</property>
+        <property name="output_log_level">debug</property><!-- 日志输出级别 -->
+        <property name="file_prefix">HomedotServerLogs_</property>
+        <property name="log_pattern" value="[%level] %d{yyyy-MM-dd HH:mm:ss,SSS} [%t] %c.%M(%L) | %msg%xEx%n" />
+    </Properties>
+
+    <Appenders>
+        <!--这个输出控制台的配置 -->
+        <Console name="Console" target="SYSTEM_OUT">
+            <!-- 控制台只输出level及以上级别的信息(onMatch),其他的直接拒绝(onMismatch) -->
+            <ThresholdFilter level="trace" onMatch="ACCEPT" onMismatch="DENY" />
+            <!--这个都知道是输出日志的格式 -->
+            <PatternLayout pattern="${log_pattern}" />
+        </Console>
+
+        <!-- 重要的是，如果有多个ThresholdFilter，那么Filters是必须的，同时在Filters中，首先要过滤不符合的日志级别，把不需要的首先DENY掉，然后再ACCEPT需要的日志级别，这个次序不能搞颠倒。 -->
+
+        <!-- 这个会打印出所有的信息，每次大小超过size，则这size大小的日志会自动存入按年份-月份建立的文件夹下面并进行压缩，作为存档 -->
+        <!-- 按日生成归档日志 -->
+        <!-- 设置日志格式并配置日志压缩格式(service.log.年份.gz) -->
+
+        <!-- 显示INFO级别的信息 -->
+        <RollingRandomAccessFile name="INFO_LOG" fileName="${trans_log_path}/${file_prefix}info.log" filePattern="${trans_log_path}/${file_prefix}info.log.%d{yyyy-MM-dd}.log.gz">
+            <PatternLayout>
+                <pattern>${log_pattern}</pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true" />
+            </Policies>
+            <Filters>
+                <ThresholdFilter level="warn" onMatch="DENY" onMismatch="NEUTRAL"/>
+                <ThresholdFilter level="info" onMatch="ACCEPT" onMismatch="DENY"/>
+            </Filters>
+        </RollingRandomAccessFile>
+
+        <!--如果需要配置多个Rollingfile地址，还需要在root下添加appender-ref ref="ERR_LOG"/> 只显示error级别的信息 -->
+        <RollingRandomAccessFile name="ERROR_LOG" fileName="${trans_log_path}/${file_prefix}error.log" filePattern="${trans_log_path}/${file_prefix}error.log.%d{yyyy-MM-dd}.log.gz">
+            <PatternLayout>
+                <pattern>${log_pattern}</pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true" />
+            </Policies>
+            <Filters>
+                <ThresholdFilter level="error" onMatch="ACCEPT" onMismatch="DENY" />
+            </Filters>
+        </RollingRandomAccessFile>
+
+        <!-- DEBUG日志格式 -->
+        <RollingRandomAccessFile name="DEBUG_LOG" fileName="${trans_log_path}/${file_prefix}debug.log" filePattern="${trans_log_path}/${file_prefix}debug.log.%d{yyyy-MM-dd}.log.gz">
+            <PatternLayout>
+                <pattern>${log_pattern}</pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true" />
+            </Policies>
+            <Filters>
+                <ThresholdFilter level="info" onMatch="DENY" onMismatch="NEUTRAL"/>
+                <ThresholdFilter level="debug" onMatch="ACCEPT" onMismatch="NEUTRAL"/>
+            </Filters>
+        </RollingRandomAccessFile>
+
+        <!-- WARN_LOG日志格式 -->
+        <RollingRandomAccessFile name="WARN_LOG" fileName="${trans_log_path}/${file_prefix}warn.log" filePattern="${trans_log_path}/${file_prefix}warn.log.%d{yyyy-MM-dd}.log.gz">
+            <PatternLayout>
+                <pattern>${log_pattern}</pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true" />
+            </Policies>
+            <Filters>
+                <ThresholdFilter level="error" onMatch="DENY" onMismatch="NEUTRAL"/>
+                <ThresholdFilter level="warn" onMatch="ACCEPT" onMismatch="DENY"/>
+            </Filters>
+        </RollingRandomAccessFile>
+    </Appenders>
+
+    <!--然后定义logger，只有定义了logger并引入的appender，appender才会生效 -->
+    <Loggers>
+        <!-- 第三方日志系统 -->
+        <Logger name="org" level="error" additivity="false">
+            <AppenderRef ref="DEBUG_LOG" />
+            <AppenderRef ref="INFO_LOG" />
+            <AppenderRef ref="WARN_LOG" />
+            <AppenderRef ref="ERROR_LOG" />
+            <AppenderRef ref="Console" />
+        </Logger>
+        <Logger name="net" level="error" additivity="false">
+            <AppenderRef ref="DEBUG_LOG" />
+            <AppenderRef ref="INFO_LOG" />
+            <AppenderRef ref="WARN_LOG" />
+            <AppenderRef ref="ERROR_LOG" />
+            <AppenderRef ref="Console" />
+        </Logger>
+        <Logger name="org.apache" level="debug" additivity="false">
+            <AppenderRef ref="DEBUG_LOG" />
+            <AppenderRef ref="INFO_LOG" />
+            <AppenderRef ref="WARN_LOG" />
+            <AppenderRef ref="ERROR_LOG" />
+            <AppenderRef ref="Console" />
+        </Logger>
+
+        <Logger name="org.displaytag" level="error" additivity="false">
+            <AppenderRef ref="DEBUG_LOG" />
+            <AppenderRef ref="INFO_LOG" />
+            <AppenderRef ref="WARN_LOG" />
+            <AppenderRef ref="ERROR_LOG" />
+            <AppenderRef ref="Console" />
+        </Logger>
+
+
+
+        <!-- 配置日志的根节点，建立一个默认的root的logger，需要在root的level中指定输出的级别  -->
+        <Root level="${output_log_level}">
+            <appender-ref ref="DEBUG_LOG" />
+            <appender-ref ref="INFO_LOG" />
+            <appender-ref ref="WARN_LOG" />
+            <appender-ref ref="ERROR_LOG" />
+            <appender-ref ref="Console" />
+        </Root>
+
+    </Loggers>
+
+</Configuration>
