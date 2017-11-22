@@ -1,6 +1,7 @@
 package Util.HttpClientUtil;
 
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -67,13 +68,6 @@ public class HttpClientUtil {
                     e.printStackTrace();
                 }
             }
-            if(httpClient != null){
-                try {
-                    httpClient.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
         }
         return null;
     }
@@ -118,13 +112,6 @@ public class HttpClientUtil {
             if(response != null){
                 try {
                     response.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            if(httpClient != null){
-                try {
-                    httpClient.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -180,13 +167,6 @@ public class HttpClientUtil {
                     e.printStackTrace();
                 }
             }
-            if(httpClient != null){
-                try {
-                    httpClient.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
         }
         return null;
     }
@@ -236,13 +216,6 @@ public class HttpClientUtil {
                     e.printStackTrace();
                 }
             }
-            if(httpClient != null){
-                try {
-                    httpClient.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
         }
         return null;
     }
@@ -278,13 +251,6 @@ public class HttpClientUtil {
             if(response != null){
                 try {
                     response.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            if(httpClient != null){
-                try {
-                    httpClient.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -401,10 +367,10 @@ public class HttpClientUtil {
             LOG.warn("we don't have base url, check config");
             throw new Exception("missing base url");
         }
-
+        CloseableHttpAsyncClient hc = HttpClientFactory.getInstance().getHttpAsyncClientPool()
+                .getAsyncHttpClient();
         try {
-            CloseableHttpAsyncClient hc = HttpClientFactory.getInstance().getHttpAsyncClientPool()
-                    .getAsyncHttpClient();
+
 
             hc.start();
 

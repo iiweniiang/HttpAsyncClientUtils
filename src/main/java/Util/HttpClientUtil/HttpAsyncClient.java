@@ -48,6 +48,8 @@ public class HttpAsyncClient {
 
     private static int maxPerRoute = 1500;// 每个主机的并发最多只有1500
 
+    private static int connectionRequestTimeout = 3000; //从连接池中后去连接的timeout时间
+
     // http代理相关参数
     private String host = "";
     private int port = 0;
@@ -76,6 +78,7 @@ public class HttpAsyncClient {
             MalformedChallengeException, IOReactorException {
 
         RequestConfig requestConfig = RequestConfig.custom()
+                .setConnectionRequestTimeout(connectionRequestTimeout)
                 .setConnectTimeout(connectTimeout)
                 .setSocketTimeout(socketTimeout).build();
 

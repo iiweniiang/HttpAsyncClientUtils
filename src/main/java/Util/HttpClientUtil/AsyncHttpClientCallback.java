@@ -29,7 +29,6 @@ public class AsyncHttpClientCallback implements FutureCallback<HttpResponse>{
         LOG.warn("response:{}",getHttpContent(response));
 
         HttpClientUtils.closeQuietly(response);
-
     }
 
     /**
