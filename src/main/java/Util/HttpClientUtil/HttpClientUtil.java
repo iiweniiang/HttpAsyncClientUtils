@@ -281,6 +281,9 @@ public class HttpClientUtil {
         try {
             hc.start();
             HttpPost httpPost = new HttpPost(baseUrl);
+
+            httpPost.setHeader("Connection","close");
+
             if (null != postString) {
                 LOG.debug("exeAsyncReq post postBody={}", postString);
                 StringEntity entity = new StringEntity(postString.toString(), utf8Charset);
@@ -314,7 +317,7 @@ public class HttpClientUtil {
      * @apiNote http接口处用 @RequestParam接收参数
      */
     public static void httpAsyncPost(String baseUrl, List<BasicNameValuePair> postBody,
-                              List<BasicNameValuePair> urlParams, FutureCallback callback) throws Exception {
+                              List<BasicNameValuePair> urlParams, FutureCallback callback ) throws Exception {
         if (baseUrl == null || "".equals(baseUrl)) {
             LOG.warn("we don't have base url, check config");
             throw new Exception("missing base url");
@@ -327,6 +330,9 @@ public class HttpClientUtil {
             hc.start();
 
             HttpPost httpPost = new HttpPost(baseUrl);
+
+            httpPost.setHeader("Connection","close");
+
             if (null != postBody) {
                 LOG.debug("exeAsyncReq post postBody={}", postBody);
                 UrlEncodedFormEntity entity = new UrlEncodedFormEntity(
@@ -376,6 +382,8 @@ public class HttpClientUtil {
 
             HttpGet httpGet = new HttpGet(baseUrl);
 
+            httpGet.setHeader("Connection","close");
+
             if (null != urlParams || "".equals(urlParams)) {
 
                 httpGet.setURI(new URI(httpGet.getURI().toString()
@@ -418,6 +426,8 @@ public class HttpClientUtil {
             hc.start();
 
             HttpPost httpGet = new HttpPost(baseUrl);
+
+            httpGet.setHeader("Connection","close");
 
             if (null != urlParams) {
 

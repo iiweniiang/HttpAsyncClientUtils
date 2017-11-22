@@ -98,7 +98,7 @@ public class HttpAsyncClient {
                 .build();
 
         // 配置io线程
-        IOReactorConfig ioReactorConfig = IOReactorConfig.custom()
+        IOReactorConfig ioReactorConfig = IOReactorConfig.custom().setSoKeepAlive(false).setTcpNoDelay(true)
                 .setIoThreadCount(Runtime.getRuntime().availableProcessors())
                 .build();
         // 设置连接池大小
