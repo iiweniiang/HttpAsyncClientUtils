@@ -1,7 +1,7 @@
 package Util.HttpClientUtil;
 
+import Util.HttpClientUtil.HttpClientFactory;
 import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -48,6 +48,7 @@ public class HttpClientUtil {
         CloseableHttpResponse response  = null;
         try {
             httpPost.setEntity(new UrlEncodedFormEntity(list));
+//            httpPost.setHeader("Connection","close");
             response = httpClient.execute(httpPost);
             LOG.warn("========HttpResponseProxy：========"+response.getStatusLine());
             HttpEntity entity = response.getEntity();
@@ -271,7 +272,7 @@ public class HttpClientUtil {
      * @apiNote http接口处用 @RequestParam接收参数
      */
     public static void httpAsyncPost(String baseUrl,String postString,
-                              String urlParams,FutureCallback callback) throws Exception {
+                                     String urlParams,FutureCallback callback) throws Exception {
         if (baseUrl == null || "".equals(baseUrl)) {
             LOG.warn("we don't have base url, check config");
             throw new Exception("missing base url");
@@ -282,7 +283,7 @@ public class HttpClientUtil {
             hc.start();
             HttpPost httpPost = new HttpPost(baseUrl);
 
-            httpPost.setHeader("Connection","close");
+//            httpPost.setHeader("Connection","close");
 
             if (null != postString) {
                 LOG.debug("exeAsyncReq post postBody={}", postString);
@@ -317,7 +318,7 @@ public class HttpClientUtil {
      * @apiNote http接口处用 @RequestParam接收参数
      */
     public static void httpAsyncPost(String baseUrl, List<BasicNameValuePair> postBody,
-                              List<BasicNameValuePair> urlParams, FutureCallback callback ) throws Exception {
+                                     List<BasicNameValuePair> urlParams, FutureCallback callback ) throws Exception {
         if (baseUrl == null || "".equals(baseUrl)) {
             LOG.warn("we don't have base url, check config");
             throw new Exception("missing base url");
@@ -331,7 +332,7 @@ public class HttpClientUtil {
 
             HttpPost httpPost = new HttpPost(baseUrl);
 
-            httpPost.setHeader("Connection","close");
+//            httpPost.setHeader("Connection","close");
 
             if (null != postBody) {
                 LOG.debug("exeAsyncReq post postBody={}", postBody);
@@ -382,7 +383,7 @@ public class HttpClientUtil {
 
             HttpGet httpGet = new HttpGet(baseUrl);
 
-            httpGet.setHeader("Connection","close");
+//            httpGet.setHeader("Connection","close");
 
             if (null != urlParams || "".equals(urlParams)) {
 
@@ -427,7 +428,7 @@ public class HttpClientUtil {
 
             HttpPost httpGet = new HttpPost(baseUrl);
 
-            httpGet.setHeader("Connection","close");
+//            httpGet.setHeader("Connection","close");
 
             if (null != urlParams) {
 
