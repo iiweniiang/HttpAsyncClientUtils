@@ -21,3 +21,7 @@ util for httpAsyncClient and httpSyncClient  in JAVA
     发现httpAsyncClient默认是长连接，所以在不需要长连接的时候记得要把
     
     请求头中的connection设成false
+    
+2018.1.2
+
+    加入okhttp
