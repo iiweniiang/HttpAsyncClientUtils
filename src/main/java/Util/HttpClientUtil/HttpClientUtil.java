@@ -1,6 +1,6 @@
 package Util.HttpClientUtil;
 
-import Util.HttpClientUtil.HttpClientFactory;
+import okhttp3.*;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -18,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.net.URI;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -30,7 +31,8 @@ public class HttpClientUtil {
 
     private static String utf8Charset = "utf-8";
 
-
+    private static final MediaType JSON
+            = MediaType.parse("application/json; charset=utf-8");
     /**
      * 向指定的url发送一次post请求,参数是List<NameValuePair>
      * @param baseUrl 请求地址
@@ -272,7 +274,7 @@ public class HttpClientUtil {
      * @apiNote http接口处用 @RequestParam接收参数
      */
     public static void httpAsyncPost(String baseUrl,String postString,
-                                     String urlParams,FutureCallback callback) throws Exception {
+                              String urlParams,FutureCallback callback) throws Exception {
         if (baseUrl == null || "".equals(baseUrl)) {
             LOG.warn("we don't have base url, check config");
             throw new Exception("missing base url");
@@ -318,7 +320,7 @@ public class HttpClientUtil {
      * @apiNote http接口处用 @RequestParam接收参数
      */
     public static void httpAsyncPost(String baseUrl, List<BasicNameValuePair> postBody,
-                                     List<BasicNameValuePair> urlParams, FutureCallback callback ) throws Exception {
+                              List<BasicNameValuePair> urlParams, FutureCallback callback ) throws Exception {
         if (baseUrl == null || "".equals(baseUrl)) {
             LOG.warn("we don't have base url, check config");
             throw new Exception("missing base url");
@@ -447,6 +449,127 @@ public class HttpClientUtil {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+
+
+    public static String OkSyncPost(String url, String json) throws IOException {
+
+        OkHttpClient okClient = HttpClientFactory.getInstance().getOkClientPool().getHttpClient();
+
+        RequestBody body = RequestBody.create(JSON, json);
+        Request request = new Request.Builder()
+                .url(url)
+                .post(body)
+                .build();
+        try (Response response = okClient.newCall(request).execute()) {
+
+            return response.body().string();
+        }
+    }
+
+    public static void OkAsyncPost(String url, String json) throws IOException {
+        OkHttpClient okClient = HttpClientFactory.getInstance().getOkClientPool().getHttpClient();
+
+        RequestBody body = RequestBody.create(JSON, json);
+        Request request = new Request.Builder()
+                .url(url)
+                .post(body)
+                .build();
+        Call call = okClient.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+
+                LOG.warn("OkAsyncPost回调:" + response.body().string());
+            }
+        });
+
+    }
+
+
+    public static void OkAsyncPost(String url, Map<String,String> map) throws IOException {
+        OkHttpClient okClient = HttpClientFactory.getInstance().getOkClientPool().getHttpClient();
+
+        FormBody.Builder formBodyBuilder = new FormBody.Builder();
+        for (Map.Entry<String, String> entry : map.entrySet()) {
+            formBodyBuilder.add(entry.getKey(),entry.getValue());
+        }
+        Request request = new Request.Builder()
+                .url(url)
+                .post(formBodyBuilder.build())
+                .build();
+        Call call = okClient.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+
+                LOG.warn("OkAsyncPost回调:" + response.body().string());
+            }
+        });
+
+    }
+
+    public static void OkAsyncPost(String url, Map<String,String> map, Callback callback) throws IOException {
+        OkHttpClient okClient = HttpClientFactory.getInstance().getOkClientPool().getHttpClient();
+
+        FormBody.Builder formBodyBuilder = new FormBody.Builder();
+        for (Map.Entry<String, String> entry : map.entrySet()) {
+            formBodyBuilder.add(entry.getKey(),entry.getValue());
+        }
+
+        Request request = new Request.Builder()
+                .url(url)
+                .post(formBodyBuilder.build())
+                .build();
+        Call call = okClient.newCall(request);
+        call.enqueue(callback);
+
+    }
+
+    public static String OkSyncGet(String url) throws IOException {
+
+        OkHttpClient okClient = HttpClientFactory.getInstance().getOkClientPool().getHttpClient();
+
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
+        try (Response response = okClient.newCall(request).execute()) {
+
+            return response.body().string();
+        }
+    }
+
+    public static void OkAsyncGet(String url) throws IOException {
+
+        OkHttpClient okClient = HttpClientFactory.getInstance().getOkClientPool().getHttpClient();
+
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
+        Call call = okClient.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+
+                LOG.warn("OkAsyncGet回调:" + response.body().string());
+            }
+        });
     }
 
 }

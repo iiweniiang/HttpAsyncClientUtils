@@ -10,6 +10,8 @@ public class HttpClientFactory {
 
     private static HttpSyncClient httpSyncClient = new HttpSyncClient();
 
+    private static OkClient okClient = new OkClient();
+
     private HttpClientFactory() {
     }
 
@@ -27,6 +29,10 @@ public class HttpClientFactory {
 
     protected HttpSyncClient getHttpSyncClientPool() {
         return httpSyncClient;
+    }
+
+    protected OkClient getOkClientPool() {
+        return okClient;
     }
 
 }
